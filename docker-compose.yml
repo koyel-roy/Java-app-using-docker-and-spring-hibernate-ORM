@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  java_spring:
+    container_name: java_spring
+    image: franklinn/java_spring:1.0.0
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=jdbc:postgresql://postgres_service:5432/postgres
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    depends_on:
+      - spring_app
+
+  spring_app:
+    container_name: spring_app
+    restart: always
+    image: postgres:16
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgresql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+
+volumes:
+  postgres-data:
+    driver: local
