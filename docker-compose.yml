@@ -8,18 +8,18 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DATABASE_URL=jdbc:postgresql://postgres_service:5432/postgres
-      - DATABASE_USERNAME=postgres
-      - DATABASE_PASSWORD=postgres
+      - DATABASE_URL=jdbc:postgresql://spring_app:5432/postgres
+      - DATABASE_USERNAME=admin
+      - DATABASE_PASSWORD=password
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: always
-    depends_on:
-      - spring_app
-
+    # depends_on:
+    #   - spring_app
+#old service
   spring_app:
     container_name: spring_app
     restart: always
